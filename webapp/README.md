@@ -23,7 +23,3 @@ Licenciando sob a WTFPL.
 ## Contribuindo
 
 Só fazer uma pull request.
-
-## TODO
-
-- Adicionar possiblidade de importar/exportar backup do localStorage como JSON. (Atualmente só existe sincronização para o servidor da API.)
