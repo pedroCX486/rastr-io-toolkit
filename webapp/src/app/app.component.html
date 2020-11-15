@@ -1,0 +1,170 @@
+<div style="padding: 5px; position: relative; height: 100vh;">
+
+  <img src="./assets/logo.png" style="width: 20rem; height: auto;" />
+  <div class="input-group">
+    <input type="text" class="form-control" [(ngModel)]="rastreamentoInput" placeholder="Rastreamento"
+      aria-describedby="button-addon" (keydown.enter)="rastrear(rastreamentoInput)">
+    <div class="input-group-append" id="button-addon">
+      <button class="btn btn-outline-primary" (click)="rastrear(rastreamentoInput)" type="button">Rastrear</button>
+      <button *ngIf="!modoAdicionar" class="btn btn-outline-success" type="button"
+        (click)="toggleAdicionar(true);">Adicionar</button>
+      <button class="btn btn-outline-danger" (click)="limpar()" type="button">Limpar</button>
+    </div>
+  </div>
+
+  <div class="jumbotron adicionar-codigo" *ngIf="modoAdicionar">
+    <input type="text" class="form-control" placeholder="Nome do Código" #adicionarNomeCodigoInput
+      aria-label="Nome para código de rastreamento" aria-describedby="button-addon2" [(ngModel)]="nomeCodigoFormModal"
+      (keydown.enter)="adicionarCodigoInput.focus()">
+    <br />
+    <input type="text" class="form-control" placeholder="Código" aria-label="Código de rastreamento"
+      aria-describedby="button-addon2" #adicionarCodigoInput [(ngModel)]="codigoFormModal"
+      (keydown.enter)="adicionarCodigo(nomeCodigoFormModal, codigoFormModal)">
+    <br />
+    <button class="btn btn-outline-success" type="button"
+      (click)="adicionarCodigo(nomeCodigoFormModal, codigoFormModal);">
+      Adicionar
+    </button>
+    &nbsp;
+    <button class="btn btn-outline-danger" type="button" (click)="toggleAdicionar(false);">Cancelar</button>
+  </div>
+
+  <ul class="list-group">
+    <li *ngFor="let objeto of listaObjRastreamentos"
+      class="list-group-item d-flex justify-content-between align-items-center">
+      <div style="display: contents;">
+        <div (click)="rastrear(objeto);" style="width: 80%;">
+          <strong>{{objeto.nome}}</strong>
+          <br />
+          {{objeto.codigo}}
+          <br />
+          <small>{{objeto?.rastreamento}}</small>
+        </div>
+        <div style="width: 10%;">
+          <span title="Deletar" class="badge badge-light" (click)="removerCodigo(objeto)">
+            <i style="color: orangered;" class="material-icons md-24">delete</i>
+          </span>
+          <span title="Editar" class="badge badge-light" (click)="editarCodigo(objeto)">
+            <i style="color: gray;" class="material-icons md-24">edit</i>
+          </span>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <br />
+  <dynamic-badge [badgeType]="tipoBadge" [mainText]="'Status'" [infoText]="apiStatus" [colorMainText]="'light'">
+  </dynamic-badge>
+</div>
+
+<div class="modal fade" bsModal #rastreamentoModal="bs-modal" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-nested-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-nested-name1" class="modal-title pull-left">
+          Rastreamentos do Objeto: {{objeto?.numero || mensagem?.objeto}}
+        </h4>
+        <button type="button" class="close pull-right" aria-label="Fechar" (click)="rastreamentoModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!!mensagem">{{mensagem?.texto}}</div>
+        <div *ngIf="!!objeto">
+          Código: {{objeto?.numero}} <br />
+          <span *ngIf="!!nomeObjeto">Nome: {{nomeObjeto}} <br /></span>
+          Tipo: {{objeto?.nome}} <br />
+          Categoria: {{objeto?.categoria}} <br />
+          <br />
+          <p><strong>Eventos:</strong></p>
+          <p><button type="button" class="btn btn-info" (click)="toggleVisualizacao()">
+              Alternar Visualização
+            </button></p>
+          <div *ngIf="!flagVisualizacao" style="overflow: auto;">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Hora</th>
+                  <th>Unidade</th>
+                  <th>Descrição</th>
+                  <th>Destino</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let evento of objeto?.evento">
+                  <td>{{evento?.data}}</td>
+                  <td>{{evento?.hora}}</td>
+                  <td placement="top" container="body" tooltip="{{evento?.unidade?.local}}">
+                    {{evento?.unidade?.local}}
+                  </td>
+                  <td placement="top" container="body" tooltip="{{evento?.descricao}}">
+                    {{evento?.descricao}}
+                  </td>
+                  <td placement="top" container="body" tooltip="{{evento?.destino ? evento?.destino[0]?.local : ''}}">
+                    {{evento?.destino ? evento?.destino[0]?.local : ''}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <small>* Coloque o mouse em cima dos nomes para ler mais.</small>
+          </div>
+          <div *ngIf="flagVisualizacao">
+            <div class="accordion" id="accordionParent" style="padding: 5px">
+              <div class="card" *ngFor="let evento of objeto?.evento; let i = index">
+                <div class="card-header" id="heading{{i}}">
+                  <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse"
+                      [attr.data-target]="'#collapse' + i" aria-expanded="true" [attr.aria-controls]="'collapse' + i"
+                      style="text-align: left !important;">
+                      {{evento?.data}} - {{evento?.hora}} - {{evento?.unidade?.local}}
+                    </button>
+                  </h2>
+                </div>
+
+                <div [attr.id]="'collapse' + i" class="collapse hide" [attr.aria-labelledby]="'heading' + i"
+                  data-parent="#accordionParent">
+                  <div class="card-body">
+                    {{evento?.descricao}} <span *ngIf="evento?.destino">para</span>
+                    {{evento?.destino ? evento?.destino[0]?.local : ''}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <small>* Clique em cima dos cards para ler mais.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #editarCodigoModal="bs-modal" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-nested-name2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-nested-name2" class="modal-title pull-left">Editar Código</h4>
+        <button type="button" class="close pull-right" aria-label="Fechar" (click)="editarCodigoModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" placeholder="Nome do código"
+          aria-label="Nome para código de rastreamento" aria-describedby="button-addon2" *ngIf="editarObj"
+          [(ngModel)]="editarObj.nome" (keydown.enter)="editarCodigoInput.focus()">
+        <br />
+        <input type="text" class="form-control" placeholder="Código" aria-label="Código de rastreamento"
+          aria-describedby="button-addon2" #editarCodigoInput *ngIf="editarObj" [(ngModel)]="editarObj.codigo"
+          (keydown.enter)="finalizarEdicaoCodigo()">
+        <br />
+        <button class="btn btn-outline-success" type="button" (click)="finalizarEdicaoCodigo()">
+          Concluir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

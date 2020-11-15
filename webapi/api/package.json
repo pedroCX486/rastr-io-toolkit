@@ -1,0 +1,25 @@
+{
+  "name": "rastr.io",
+  "version": "1.0.0",
+  "description": "Rastreador dos correios via JSON.",
+  "main": "rastr-io.js",
+  "scripts": {
+    "test": "echo \"Nenhum teste.\" && exit 1",
+    "start": "nodemon rastr-io.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedroCX486/rastr-io-toolkit.git"
+  },
+  "author": "Pedro Morais",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/pedroCX486/rastr-io-toolkit/issues"
+  },
+  "homepage": "https://github.com/pedroCX486/rastr-io-toolkit#readme",
+  "dependencies": {
+    "express": "^4.17.0",
+    "request": "^2.88.0",
+    "cors": "^2.8.5"
+  }
+}

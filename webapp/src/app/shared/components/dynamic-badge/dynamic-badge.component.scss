@@ -1,0 +1,95 @@
+.badge-body {
+    // General Text
+    font-size: 8pt;
+    font-family: Arial, Helvetica, sans-serif;
+    
+    // Round Corners
+    border-radius: 4px;
+    padding: 1px;
+    
+    // Alignment
+    text-align: center;
+    display: table;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+// Main Text
+.badge-text{
+    // Alignment
+    float: left;
+    
+    // Main Text
+    padding: 3px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+// Info Text
+.info-text {
+    //Round Corners
+    border-radius: 3px;
+    background: #FFF;
+    padding: 3px;
+    
+    // Alignment
+    float: right;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+// Badge Types
+.info {
+    background: rgb(37, 137, 230);
+    
+    .info-text {
+        color: rgb(37, 137, 230);
+    }
+}
+
+.success {
+    background: rgb(7, 211, 0);
+    
+    .info-text {
+        color: rgb(7, 211, 0);
+    }
+}
+
+.warning {
+    background: rgb(255, 193, 7);
+    
+    .info-text {
+        color: rgb(255, 193, 7);
+    }
+}
+
+.error {
+    background: rgb(230, 66, 37);
+
+    .info-text {
+        color: rgb(230, 66, 37);
+    }
+}
+
+// Main Text Color
+.light-text {
+    color: #FFF;
+}
+.dark-text {
+    color: #212529;
+}
+.black-text {
+    color: #000;
+}
+
+// Info Text Background
+.light-background {
+    background-color: #FFF;   
+}
+.dark-background {
+    background-color: #212529;   
+}
+.black-background {
+    background-color: #000;   
+}
