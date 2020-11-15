@@ -1,8 +1,8 @@
 # Rastr-io
 
-Um webapp **leve** para rastreamento de códigos dos Correios (Brasil).
+Um webapp para rastreamento de códigos dos Correios (Brasil).
   
-Projeto criado com framework [Angular](https://github.com/angular/angular-cli), utilizando como backend a API [Rastr.io](https://github.com/pedroCX486/rastr-io).
+Projeto criado com framework [Angular](https://github.com/angular/angular-cli).
 
 ## Development server
 
