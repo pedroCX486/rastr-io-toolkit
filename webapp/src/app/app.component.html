@@ -6,27 +6,27 @@
       aria-describedby="button-addon" (keydown.enter)="rastrear(rastreamentoInput)">
     <div class="input-group-append" id="button-addon">
       <button class="btn btn-outline-primary" (click)="rastrear(rastreamentoInput)" type="button">Rastrear</button>
-      <button *ngIf="!modoAdicionar" class="btn btn-outline-success" type="button"
-        (click)="toggleAdicionar(true);">Adicionar</button>
+      <button *ngIf="!toggleAdicionar" class="btn btn-outline-success" type="button"
+        (click)="modoAdicionar(true);">Adicionar</button>
       <button class="btn btn-outline-danger" (click)="limpar()" type="button">Limpar</button>
     </div>
   </div>
 
-  <div class="jumbotron adicionar-codigo" *ngIf="modoAdicionar">
+  <div class="jumbotron adicionar-codigo" *ngIf="toggleAdicionar">
     <input type="text" class="form-control" placeholder="Nome do Código" #adicionarNomeCodigoInput
       aria-label="Nome para código de rastreamento" aria-describedby="button-addon2" [(ngModel)]="nomeCodigoFormModal"
       (keydown.enter)="adicionarCodigoInput.focus()">
     <br />
     <input type="text" class="form-control" placeholder="Código" aria-label="Código de rastreamento"
       aria-describedby="button-addon2" #adicionarCodigoInput [(ngModel)]="codigoFormModal"
-      (keydown.enter)="adicionarCodigo(nomeCodigoFormModal, codigoFormModal)">
+      (keydown.enter)="adicionarCodigoRastreamento(nomeCodigoFormModal, codigoFormModal)">
     <br />
     <button class="btn btn-outline-success" type="button"
-      (click)="adicionarCodigo(nomeCodigoFormModal, codigoFormModal);">
+      (click)="adicionarCodigoRastreamento(nomeCodigoFormModal, codigoFormModal);">
       Adicionar
     </button>
     &nbsp;
-    <button class="btn btn-outline-danger" type="button" (click)="toggleAdicionar(false);">Cancelar</button>
+    <button class="btn btn-outline-danger" type="button" (click)="modoAdicionar(false);">Cancelar</button>
   </div>
 
   <ul class="list-group">
@@ -41,10 +41,10 @@
           <small>{{objeto?.rastreamento}}</small>
         </div>
         <div style="width: 10%;">
-          <span title="Deletar" class="badge badge-light" (click)="removerCodigo(objeto)">
+          <span title="Deletar" class="badge badge-light" (click)="removerCodigoRastreamento(objeto)">
             <i style="color: orangered;" class="material-icons md-24">delete</i>
           </span>
-          <span title="Editar" class="badge badge-light" (click)="editarCodigo(objeto)">
+          <span title="Editar" class="badge badge-light" (click)="editarCodigoRastreamento(objeto)">
             <i style="color: gray;" class="material-icons md-24">edit</i>
           </span>
         </div>
@@ -63,7 +63,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 id="dialog-nested-name1" class="modal-title pull-left">
-          Rastreamentos do Objeto: {{objeto?.numero || mensagem?.objeto}}
+          Rastreamentos do Objeto: {{objetoRastreamento?.numero || mensagem?.objeto}}
         </h4>
         <button type="button" class="close pull-right" aria-label="Fechar" (click)="rastreamentoModal.hide()">
           <span aria-hidden="true">&times;</span>
@@ -71,11 +71,11 @@
       </div>
       <div class="modal-body">
         <div *ngIf="!!mensagem">{{mensagem?.texto}}</div>
-        <div *ngIf="!!objeto">
-          Código: {{objeto?.numero}} <br />
-          <span *ngIf="!!nomeObjeto">Nome: {{nomeObjeto}} <br /></span>
-          Tipo: {{objeto?.nome}} <br />
-          Categoria: {{objeto?.categoria}} <br />
+        <div *ngIf="!!objetoRastreamento">
+          Código: {{objetoRastreamento?.numero}} <br />
+          <span *ngIf="!!nomeObjetoRastreamento">Nome: {{nomeObjetoRastreamento}} <br /></span>
+          Tipo: {{objetoRastreamento?.nome}} <br />
+          Categoria: {{objetoRastreamento?.categoria}} <br />
           <br />
           <p><strong>Eventos:</strong></p>
           <p><button type="button" class="btn btn-info" (click)="toggleVisualizacao()">
@@ -93,7 +93,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let evento of objeto?.evento">
+                <tr *ngFor="let evento of objetoRastreamento?.evento">
                   <td>{{evento?.data}}</td>
                   <td>{{evento?.hora}}</td>
                   <td placement="top" container="body" tooltip="{{evento?.unidade?.local}}">
@@ -112,7 +112,7 @@
           </div>
           <div *ngIf="flagVisualizacao">
             <div class="accordion" id="accordionParent" style="padding: 5px">
-              <div class="card" *ngFor="let evento of objeto?.evento; let i = index">
+              <div class="card" *ngFor="let evento of objetoRastreamento?.evento; let i = index">
                 <div class="card-header" id="heading{{i}}">
                   <h2 class="mb-0">
                     <button class="btn btn-link" type="button" data-toggle="collapse"
@@ -152,14 +152,14 @@
       </div>
       <div class="modal-body">
         <input type="text" class="form-control" placeholder="Nome do código"
-          aria-label="Nome para código de rastreamento" aria-describedby="button-addon2" *ngIf="editarObj"
-          [(ngModel)]="editarObj.nome" (keydown.enter)="editarCodigoInput.focus()">
+          aria-label="Nome para código de rastreamento" aria-describedby="button-addon2" *ngIf="editarObjCodigoRastreamento"
+          [(ngModel)]="editarObjCodigoRastreamento.nome" (keydown.enter)="editarCodigoInput.focus()">
         <br />
         <input type="text" class="form-control" placeholder="Código" aria-label="Código de rastreamento"
-          aria-describedby="button-addon2" #editarCodigoInput *ngIf="editarObj" [(ngModel)]="editarObj.codigo"
-          (keydown.enter)="finalizarEdicaoCodigo()">
+          aria-describedby="button-addon2" #editarCodigoInput *ngIf="editarObjCodigoRastreamento"
+          [(ngModel)]="editarObjCodigoRastreamento.codigo" (keydown.enter)="finalizarEdicaoCodigoRastreamento()">
         <br />
-        <button class="btn btn-outline-success" type="button" (click)="finalizarEdicaoCodigo()">
+        <button class="btn btn-outline-success" type="button" (click)="finalizarEdicaoCodigoRastreamento()">
           Concluir
         </button>
       </div>

@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { DynamicBadgeComponent } from './shared/components/dynamic-badge/dynamic-badge.component';
+import { DynamicBadgeComponent } from '@shared/dynamic-badge/dynamic-badge.component';
 
 @NgModule({
   declarations: [
